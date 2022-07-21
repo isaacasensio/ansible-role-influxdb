@@ -1,0 +1,16 @@
+[Unit]
+Description=influxdb
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+User={{ influxdb_container_user }}
+Group=docker
+WorkingDirectory={{ influxdb_host_config_path }}
+ExecStartPre=/usr/local/bin/docker-compose -f {{ influxdb_host_config_path }}/docker-compose.yml down
+ExecStart=/usr/local/bin/docker-compose -f {{ influxdb_host_config_path }}/docker-compose.yml up
+ExecStop=/usr/local/bin/docker-compose -f {{ influxdb_host_config_path }}/docker-compose.yml down
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,15 @@
+---
+- name: Converge
+  hosts: all
+  become: true
+
+  vars:
+    influxdb_container_user: root
+    influxdb_username: "test"
+    influxdb_password: "passw)rd!"
+    influxdb_org: "home"
+    influxdb_bucket: "bucket"
+    influxdb_token: "d1f77bb2-f386-11eb-9a03-0242ac130003"
+
+  roles:
+    - role: iasensio.influxdb

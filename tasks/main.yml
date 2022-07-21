@@ -1,0 +1,49 @@
+---
+- name: Ensure influxdb config folder exists
+  become: true
+  ansible.builtin.file:
+    dest: "{{ influxdb_host_config_path }}"
+    state: directory
+    mode: 0775
+
+- name: Ensure influxdb data folder exists
+  become: true
+  ansible.builtin.file:
+    dest: "{{ influxdb_host_data_path }}"
+    state: directory
+    mode: 0700
+
+- name: Copy influxdb docker-compose template.
+  ansible.builtin.template:
+    src: templates/docker-compose.yml.j2
+    dest: "{{ influxdb_host_config_path }}/docker-compose.yml"
+    mode: 0644
+  become: true
+
+- name: Create systemd influxdb service.
+  ansible.builtin.template:
+    src: templates/influxdb.service.j2
+    dest: "/etc/systemd/system/influxdb.service"
+    mode: 0644
+  become: true
+
+- name: Ensure influxdb.service is started
+  ansible.builtin.systemd:
+    state: started
+    enabled: true
+    name: influxdb
+  become: true
+
+- name: Remove old image versions
+  become: true
+  docker_prune:
+    images: true
+    images_filters:
+      dangling: false
+  notify: Restart Docker service
+
+- name: Wait until port 8086 becomes open
+  ansible.builtin.wait_for:
+    port: "{{ influxdb_host_port }}"
+    delay: 10
+    connect_timeout: 30

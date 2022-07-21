@@ -1,0 +1,6 @@
+---
+influxdb_image: "influxdb:2.0.7-alpine"
+influxdb_host_data_path: /var/lib/influxdb2
+influxdb_host_config_path: /etc/influxdb2
+influxdb_host_port: 8086
+influxdb_retention: "1w"
