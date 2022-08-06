@@ -7,7 +7,7 @@ services:
     pull_policy: always
     container_name: influxdb
     networks:
-      - influxdb_network
+      - {{ influxdb_docker_network }}
     volumes:
       - {{influxdb_host_data_path}}:/var/lib/influxdb2:rw
       - {{influxdb_host_config_path}}:/etc/influxdb2:rw
@@ -23,6 +23,6 @@ services:
       - "{{influxdb_host_port}}:8086"
 
 networks:
-  influxdb_network:
-   external: false
-   name: influxdb_network
+  {{ influxdb_docker_network }}:
+    name: {{ influxdb_docker_network }}
+    external: true

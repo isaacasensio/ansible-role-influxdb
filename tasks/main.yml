@@ -2,9 +2,12 @@
 - name: Ensure influxdb config folder exists
   become: true
   ansible.builtin.file:
-    dest: "{{ influxdb_host_config_path }}"
+    dest: "{{ item }}"
     state: directory
     mode: 0775
+  loop:
+    - "{{ influxdb_host_config_path }}"
+    - "{{ influxdb_host_config_path}}/templates"
 
 - name: Ensure influxdb data folder exists
   become: true
@@ -19,6 +22,10 @@
     dest: "{{ influxdb_host_config_path }}/docker-compose.yml"
     mode: 0644
   become: true
+
+- name: Create an influxdb docker network
+  community.docker.docker_network:
+    name: influxdb_network
 
 - name: Create systemd influxdb service.
   ansible.builtin.template:
@@ -47,3 +54,21 @@
     port: "{{ influxdb_host_port }}"
     delay: 10
     connect_timeout: 30
+
+- name: Create apply template script
+  ansible.builtin.template:
+    src: templates/install_templates.sh.j2
+    dest: "{{ influxdb_host_config_path }}/install_templates.sh"
+    mode: 0700
+  become: true
+
+- name: Apply influxdb template
+  docker_container:
+    name: influxdb-cli
+    image: "{{ influxdb_image }}"
+    detach: false
+    command: "{{ influxdb_host_config_path }}/install_templates.sh"
+    volumes:
+      - "{{ influxdb_host_config_path }}/install_templates.sh:{{ influxdb_host_config_path }}/install_templates.sh"
+    networks:
+      - name: "{{ influxdb_docker_network }}"

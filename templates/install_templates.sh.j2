@@ -1,0 +1,27 @@
+#!/bin/bash
+set -ex
+
+host="http://influxdb:8086"
+token="{{ influxdb_token }}"
+org="{{ influxdb_org }}"
+
+declare -A templates
+{% for name, url in influxdb_templates.items() %}
+templates["{{ name }}"]="{{ url }}"
+{% endfor %}
+
+for name in ${!templates[@]}; do
+    count=`influx stacks -o $org --host $host --token $token --stack-name "$name" --hide-headers | wc -l`
+    url=${templates[${name}]}
+    if [ $count -eq 0 ]; then
+        echo "Stack $name not found. Creating it..."
+        stackId=`influx stacks init -n $name -o $org --host $host --token $token --template-url "$url" --hide-headers | awk '{print $1}'`
+        echo "Stack $name created with id $stackId"
+        influx apply --stack-id $stackId -o $org --host $host --token $token --force yes
+    else
+        stackId=`influx stacks -o $org --host $host --token $token --stack-name "$name" --hide-headers | awk '{print $1}'`
+        echo "Stack $name found with id $stackId"
+        influx stacks update -i $stackId --host $host --token $token --template-url "$url" --hide-headers
+        influx apply --stack-id $stackId -o $org --host $host --token $token --force yes
+    fi
+done
