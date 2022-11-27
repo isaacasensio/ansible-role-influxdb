@@ -5,11 +5,11 @@
 
   vars:
     influxdb_container_user: root
-    influxdb_username: "test"
-    influxdb_password: "passw)rd!"
+    influxdb_username: "admin"
+    influxdb_password: "&*!!p4zz!"
     influxdb_org: "home"
     influxdb_bucket: "bucket"
-    influxdb_token: "d1f77bb2-f386-11eb-9a03-0242ac130003"
+    influxdb_token: "ffe8006b-9bc0-4421-aa09-942ad8ebcb9a"
 
   roles:
     - role: iasensio.influxdb

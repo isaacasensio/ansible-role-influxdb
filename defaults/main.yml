@@ -6,3 +6,4 @@ influxdb_host_port: 8086
 influxdb_retention: "1w"
 influxdb_docker_network: influxdb_network
 influxdb_templates: {}
+influxdb_container_user: "influxdb"

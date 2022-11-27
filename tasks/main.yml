@@ -43,7 +43,7 @@
 
 - name: Remove old image versions
   become: true
-  docker_prune:
+  community.docker.docker_prune:
     images: true
     images_filters:
       dangling: false
@@ -63,12 +63,13 @@
   become: true
 
 - name: Apply influxdb template
-  docker_container:
+  community.docker.docker_container:
     name: influxdb-cli
     image: "{{ influxdb_image }}"
     detach: false
     command: "{{ influxdb_host_config_path }}/install_templates.sh"
     volumes:
-      - "{{ influxdb_host_config_path }}/install_templates.sh:{{ influxdb_host_config_path }}/install_templates.sh"
+      - "{{ influxdb_host_config_path }}/install_templates.sh:\
+      {{ influxdb_host_config_path }}/install_templates.sh"
     networks:
       - name: "{{ influxdb_docker_network }}"

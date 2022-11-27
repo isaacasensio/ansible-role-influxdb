@@ -1,7 +1,7 @@
 InfluxDB
 =========
 
-Installs [influxdb](https://github.com/influxdata/influxdb) as a docker container.
+Installs [influxdb](https://github.com/influxdata/influxdb) docker container as a daemon.
 
 
 Role Variables
@@ -25,7 +25,7 @@ influxdb_host_config_path: /etc/influxdb2
 Host path which stores influxdb config.
 
 ```
-influxdb_container_user: pi
+influxdb_container_user: influxdb
 ```
 User running the container 
 
@@ -55,7 +55,7 @@ influxdb_bucket: "bucket"
 System inital bucket
 
 ```
-influxdb_token: "d1f77bb2-f386-11eb-9a03-0242ac130003"
+influxdb_token: "ffe8006b-9bc0-4421-aa09-942ad8ebcb9a"
 ```
 Admin token
 
