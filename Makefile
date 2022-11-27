@@ -8,7 +8,7 @@ all: lint test
 help:
 	@echo "Make command examples for Ansible"
 	@echo "    lint                           to lint playbook files"
-	@echo "    test                 		  to run our molecule tests"
+	@echo "    test                           to run our molecule tests"
 	@echo "    converge                 	  to run our molecule converge"
 
 lint:
